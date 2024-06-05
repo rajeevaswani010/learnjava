@@ -1,5 +1,8 @@
 package org.learnjava.filetransfer;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -21,18 +24,23 @@ public class App
 
         // Add option for input file
         Option input = new Option("i", "input", true, "input file path");
-        input.setRequired(true);
+        input.setRequired(false);
         options.addOption(input);
 
         // Add option for output file
         Option output = new Option("o", "output", true, "output file path");
-        output.setRequired(true);
+        output.setRequired(false);
         options.addOption(output);
 
         // Add option for verbose mode
         Option verbose = new Option("v", "verbose", false, "enable verbose mode");
         verbose.setRequired(false);
         options.addOption(verbose);
+
+        // Add option for verbose mode
+        Option roleAsServerOrClient = new Option("s", "server", false, "true if server, false if client");
+        roleAsServerOrClient.setRequired(false);
+        options.addOption(roleAsServerOrClient);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -43,6 +51,7 @@ public class App
             String inputFilePath = cmd.getOptionValue("input");
             String outputFilePath = cmd.getOptionValue("output");
             boolean isVerbose = cmd.hasOption("verbose");
+            boolean isServer = cmd.hasOption("server");
 
             // Print parsed options
             System.out.println("Input file: " + inputFilePath);
@@ -50,7 +59,12 @@ public class App
             if (isVerbose) {
                 System.out.println("Verbose mode is enabled.");
             }
-
+            
+            if (isServer)
+            	Server.start();
+            else
+            	Client.start();
+            
             // Add your application logic here
             // For example, read the input file, process it, and write to the output file
 
@@ -61,4 +75,5 @@ public class App
             System.exit(1);
         }    
     }
+    
 }
